@@ -1,17 +1,16 @@
 package org.gdas.bigreportsworker.listener;
 
-import org.gdas.bigreportsworker.model.entity.AnyEntity;
-import org.gdas.bigreportsworker.service.AnyService;
+import org.gdas.bigreportsworker.service.ReportService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReportsRequestsListener {
 
-    private final AnyService anyService;
+    private final ReportService reportService;
 
-    public ReportsRequestsListener(AnyService anyService) {
-        this.anyService = anyService;
+    public ReportsRequestsListener(ReportService reportService) {
+        this.reportService = reportService;
     }
 
     @KafkaListener(
@@ -19,7 +18,6 @@ public class ReportsRequestsListener {
             groupId = "${kafka.group}"
     )
     void listener(String message) {
-        AnyEntity saved = anyService.save(message);
-        System.out.println(saved);
+        reportService.produce(message);
     }
 }
